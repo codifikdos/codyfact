@@ -70,9 +70,8 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
     {
         $credentials = $codyFact->getCredentials();
         $nameFileXML = $this->getDocName();
-        $pahtXML = $_SERVER['DOCUMENT_ROOT'] . '/CodyFact/xml/';
-        $this->createTicketInvoiceXML($pahtXML, $nameFileXML, $this->getTicketInvoice());
-        $signature = $this->signXML($pahtXML, $nameFileXML, $credentials);
+        $this->createTicketInvoiceXML($nameFileXML, $this->getTicketInvoice());
+        $signature = $this->signXML($nameFileXML, $credentials);
         $this->setSignature($signature['signature']);
         $this->setBody($signature['body']);
     }
@@ -90,7 +89,7 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
             . "-" . $this->getTicketInvoice()->getNumber();
     }
 
-    public function createTicketInvoiceXML($pahtXML, $fileXML, TicketInvoice $ticketInvoice)
+    public function createTicketInvoiceXML($fileXML, TicketInvoice $ticketInvoice)
     {
         $doc = new \DOMDocument();
         $doc->formatOutput = false;
@@ -350,15 +349,16 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
         $xml .= "</Invoice>";
         $doc->loadXML($xml);
 
-        $fileName = $pahtXML . $fileXML . '.xml';
+        $fileName = getenv('CODYFACT_PATH_XML') . $fileXML . '.xml';
         $doc->save($fileName);
     }
 
-    public function signXML($pahtXML, $filename, $credentials)
+    public function signXML($filename, $credentials)
     {
+        $pahtXML = getenv('CODYFACT_PATH_XML');
         $credentials = $credentials();
         $signature = new Signature();
-        $signature = $signature->signXML(0, $pahtXML . $filename . '.xml', $credentials['pathCertificate'], 'ceti');
+        $signature = $signature->signXML($pahtXML . $filename . '.xml', 'ceti');
 
         $zip = new \ZipArchive();
         $ruta_zip = $pahtXML . $filename . '.zip';

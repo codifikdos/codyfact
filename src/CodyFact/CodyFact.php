@@ -171,13 +171,31 @@ class CodyFact
             throw new InvalidCredentialsException();
         }
 
-        if (empty($credentials['apiUsername']) || empty($credentials['apiPasssword']) || empty($credentials['pathCertificate'])) {
+        if (empty($credentials['apiUsername']) || empty($credentials['apiPasssword'])) {
             throw new InvalidCredentialsException();
         }
 
-        if (!file_exists($credentials['pathCertificate'])) {
-            throw new CodyFactException('La ruta del certificado no es válida');
+        if (!getenv('CODYFACT_PATH_CERTIFICATE')) {
+            throw new CodyFactException('Especifica la ubicación del certificado electrónico: CODYFACT_PATH_CERTIFICATE');
         }
+
+        if (!file_exists(getenv('CODYFACT_PATH_CERTIFICATE')) || is_dir(getenv('CODYFACT_PATH_CERTIFICATE'))) {
+            throw new CodyFactException('El certificado no existe en: ' . getenv('CODYFACT_PATH_CERTIFICATE'));
+        }
+
+        if (!getenv('CODYFACT_PATH_ROOT')) {
+            throw new CodyFactException('Especifica la carpeta raiz del proyecto: CODYFACT_PATH_ROOT');
+        }
+
+        if (!is_dir(getenv('CODYFACT_PATH_ROOT') . '/xml')) {
+            mkdir(getenv('CODYFACT_PATH_ROOT') . '/xml', 0777);
+        }
+        if (!is_dir(getenv('CODYFACT_PATH_ROOT') . '/cdr')) {
+            mkdir(getenv('CODYFACT_PATH_ROOT') . '/cdr', 0777);
+        }
+
+        putenv("CODYFACT_PATH_XML=" . getenv('CODYFACT_PATH_ROOT') . '/xml/');
+        putenv("CODYFACT_PATH_CDR=" . getenv('CODYFACT_PATH_ROOT') . '/cdr/');
 
         return true;
     }

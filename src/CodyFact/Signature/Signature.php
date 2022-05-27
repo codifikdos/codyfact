@@ -4,7 +4,7 @@ namespace CodyFact\Signature;
 
 class Signature
 {
-    public function signXML($flg_firma, $ruta, $ruta_firma, $pass_firma)
+    public function signXML($ruta, $pass_firma)
     {
         $doc = new \DOMDocument();
 
@@ -21,13 +21,13 @@ class Signature
         $objDSig->addReference($doc, XMLSecurityDSig::SHA1, array('http://www.w3.org/2000/09/xmldsig#enveloped-signature'), $options);
         $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type' => 'private'));
 
-        $pfx = file_get_contents($ruta_firma);
+        $pfx = file_get_contents(getenv('CODYFACT_PATH_CERTIFICATE'));
         $key = array();
 
         openssl_pkcs12_read($pfx, $key, $pass_firma);
         $objKey->loadKey($key["pkey"]);
         $objDSig->add509Cert($key["cert"], TRUE, FALSE);
-        $objDSig->sign($objKey, $doc->documentElement->getElementsByTagName("ExtensionContent")->item($flg_firma));
+        $objDSig->sign($objKey, $doc->documentElement->getElementsByTagName("ExtensionContent")->item(0));
 
         $atributo = $doc->getElementsByTagName('Signature')->item(0);
         $atributo->setAttribute('Id', 'SignatureSP');

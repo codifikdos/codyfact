@@ -63,11 +63,15 @@ class ResponseBuilder implements IContext, IBuilder
 
     private function buildBillServiceInvoiceResponse(IRequest $request, ResponseInterface $response)
     {
-        $data = $response->getBody()->getContents();
+        $data = [
+            'contents' => $response->getBody()->getContents(),
+            'signature' => $request->getSignature(),
+            'ticketInvoice' => $request->getTicketInvoice(),
+        ];
 
         $result = ($response->getStatusCode() == 200) ? true : false;
 
-        $payment_response = new BillServiceInvoiceResponse($result, null, $data, $request);
+        $payment_response = new BillServiceInvoiceResponse($result, null, $data);
 
         return $payment_response;
     }

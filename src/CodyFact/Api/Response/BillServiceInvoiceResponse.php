@@ -41,15 +41,19 @@ class BillServiceInvoiceResponse extends AbsResponse implements \Serializable
      */
     protected $errorCode = null;
 
-    public function __construct($result = false, $error = null, $options = '', $request = null)
+    public function __construct($result = false, $error = null, $options = array())
     {
         parent::__construct($result, $error);
         if ($result) {
+            $contents = $options['contents'];
+            $signature = $options['signature'];
+            $ticketInvoice = $options['ticketInvoice'];
+
             $data = new \DOMDocument();
-            $data->loadXML($options);
+            $data->loadXML($contents);
             if (isset($data->getElementsByTagName('applicationResponse')->item(0)->nodeValue)) {
                 $cdr = $data->getElementsByTagName('applicationResponse')->item(0)->nodeValue;
-                $this->compressCDR($cdr, $request->getSignature()['hash_cpe'], $this->getDocName($request->getTicketInvoice()));
+                $this->compressCDR($cdr, $signature['hash_cpe'], $this->getDocName($ticketInvoice));
             } else {
                 $this->state = self::STATE_DECLINED;
                 $this->errorCode = $data->getElementsByTagName('faultcode')->item(0)->nodeValue;
@@ -70,7 +74,7 @@ class BillServiceInvoiceResponse extends AbsResponse implements \Serializable
     private function compressCDR($cdr, $hash, $filename)
     {
         $cdrBase64 = base64_decode($cdr);
-        $pahtCDR = $_SERVER['DOCUMENT_ROOT'] . '/CodyFact/cdr/';
+        $pahtCDR = getenv('CODYFACT_PATH_CDR');
 
         file_put_contents($pahtCDR . 'R-' . $filename . '.zip', $cdrBase64);
 
