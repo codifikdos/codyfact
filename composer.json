@@ -24,5 +24,6 @@
     "psr-4": {
       "CodyFact\\Tests\\": "tests"
     }
-  }
+  },
+  "minimum-stability": "dev"
 }
