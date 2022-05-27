@@ -1,0 +1,8 @@
+/vendor/
+.idea/
+.phpunit.cache/
+composer.lock
+cdr/
+xml/
+tests/coverage-clover.xml
+tests/coverage-coveralls.json
