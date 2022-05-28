@@ -2,7 +2,9 @@
 
 namespace CodyFact\Api\Response;
 
-class BillServiceInvoiceResponse extends AbsResponse implements \Serializable
+use CodyFact\Entity\IEntity;
+
+class BillServiceInvoiceResponse extends AbsResponse implements \Serializable, IEntity
 {
 
     /**
@@ -122,17 +124,82 @@ class BillServiceInvoiceResponse extends AbsResponse implements \Serializable
         return $this->state == self::STATE_APPROVED_WITH_OBS;
     }
 
+    public function getHash()
+    {
+        return $this->hash;
+    }
+
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+    }
+
+    public function getResponseMessage()
+    {
+        return $this->responseMessage;
+    }
+
+    public function setResponseMessage($responseMessage)
+    {
+        $this->responseMessage = $responseMessage;
+    }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    public function getErrorCode()
+    {
+        return $this->errorCode;
+    }
+
+    public function setErrorCode($errorCode)
+    {
+        $this->errorCode = $errorCode;
+    }
+
     public function serialize()
     {
         return serialize([
+            $this->result,
+            $this->error,
+            $this->hash,
+            $this->responseMessage,
+            $this->state,
+            $this->errorCode,
         ]);
     }
 
     public function unserialize($serialized)
     {
         $data = unserialize($serialized);
-
+        list(
+            $this->result,
+            $this->error,
+            $this->hash,
+            $this->responseMessage,
+            $this->state,
+            $this->errorCode,
+            ) = $data;
 
         return $this;
+    }
+
+    public function toArray()
+    {
+        return [
+            'result' => $this->result,
+            'error' => $this->error,
+            'hash' => $this->hash,
+            'responseMessage' => $this->responseMessage,
+            'state' => $this->state,
+            'errorCode' => $this->errorCode,
+        ];
     }
 }
