@@ -135,7 +135,7 @@ class CodyFact
         return $this->credentials;
     }
 
-    public function sendInvoice(TicketInvoice $ticketInvoice)
+    public function sendTicketInvoice(TicketInvoice $ticketInvoice)
     {
         $request = new BillServiceInvoiceRequest(ICommand::STATEMENT_SEND_INVOICE);
         $request->setTicketInvoice($ticketInvoice);

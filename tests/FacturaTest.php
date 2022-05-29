@@ -115,7 +115,7 @@ class FacturaTest extends TestCase
         $ticketInvoice->setPayType('');
         $ticketInvoice->setAmountSlope(0);
 
-        $response = $codyFact->sendInvoice($ticketInvoice);
+        $response = $codyFact->sendTicketInvoice($ticketInvoice);
 
         var_dump($response);
 
