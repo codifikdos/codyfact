@@ -26,5 +26,8 @@
       "CodyFact\\Tests\\": "tests"
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "config": {
+    "platform-check": false
+  }
 }
