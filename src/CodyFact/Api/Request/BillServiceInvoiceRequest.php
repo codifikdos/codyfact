@@ -4,10 +4,8 @@ namespace CodyFact\Api\Request;
 
 use CodyFact\CodyFact;
 use CodyFact\Generator\DocumentGenerator;
-use CodyFact\Generator\TicketInvoiceGenerator;
 use CodyFact\Generator\TwigGenerator;
 use CodyFact\Signature\Signature;
-use CodyFact\Generator\XMLService;
 use CodyFact\TicketInvoice\TicketInvoice;
 
 class BillServiceInvoiceRequest extends AbsRequest implements IRequest
