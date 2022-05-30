@@ -74,7 +74,7 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
     {
         $credentials = $codyFact->getCredentials();
         $nameFileXML = $this->getDocName();
-        $this->createTicketInvoiceXML($nameFileXML, $this->getTicketInvoice());
+        $this->renderAndSaveTicketInvoice($nameFileXML, $this->getTicketInvoice());
         $signature = $this->signXML($nameFileXML, $credentials);
         $this->setSignature($signature['signature']);
         $this->setBody($signature['body']);
@@ -93,7 +93,7 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
             . "-" . $this->getTicketInvoice()->getNumber();
     }
 
-    public function createTicketInvoiceXML($fileXML, TicketInvoice $ticketInvoice)
+    public function renderAndSaveTicketInvoice($fileXML, TicketInvoice $ticketInvoice)
     {
         $doc = new \DOMDocument();
         $doc->formatOutput = false;
