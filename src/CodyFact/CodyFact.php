@@ -31,6 +31,9 @@ class CodyFact
     const LANGUAGE_SPANISH = 'es';
     const LANGUAGE_DEFAULT = self::LANGUAGE_SPANISH;
 
+    const TIMEZONE_PE = 'America/Lima';
+    const TIMEZONE_DEFAULT = self::TIMEZONE_PE;
+
     /**
      * @var Client
      */

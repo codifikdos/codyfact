@@ -3,8 +3,11 @@
 namespace CodyFact\Api\Request;
 
 use CodyFact\CodyFact;
+use CodyFact\Generator\DocumentGenerator;
+use CodyFact\Generator\TicketInvoiceGenerator;
+use CodyFact\Generator\TwigGenerator;
 use CodyFact\Signature\Signature;
-use CodyFact\TemplateGenerator\XMLService;
+use CodyFact\Generator\XMLService;
 use CodyFact\TicketInvoice\TicketInvoice;
 
 class BillServiceInvoiceRequest extends AbsRequest implements IRequest
@@ -97,7 +100,17 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
         $doc->preserveWhiteSpace = true;
         $doc->encoding = 'utf-8';
 
-        $doc->loadXML(XMLService::generateInvoice($ticketInvoice));
+        $documentGenerator = new DocumentGenerator();
+
+        $documentGenerator->setGenerator(new TwigGenerator());
+
+        $xml = $documentGenerator->render('ticket_invoice.xml.twig', [
+            'ticketInvoice' => $ticketInvoice,
+            'company' => $ticketInvoice->getCompany(),
+            'customer' => $ticketInvoice->getCustomer(),
+        ]);
+
+        $doc->loadXML($xml);
 
         $fileName = getenv('CODYFACT_PATH_XML') . $fileXML . '.xml';
         $doc->save($fileName);
@@ -118,10 +131,21 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
             $zip->close();
         }
 
+        $documentGenerator = new DocumentGenerator();
+
+        $documentGenerator->setGenerator(new TwigGenerator());
+
+        $body = $documentGenerator->render('envelope.xml.twig', [
+            'data' => [
+                'username' => $this->getTicketInvoice()->getCompany()->getRuc() . $credentials['apiUsername'],
+                'password' => $credentials['apiPasssword'],
+                'fileName' => $filename . '.zip',
+                'contentFile' => base64_encode(file_get_contents($ruta_zip))
+            ]
+        ]);
+
         return [
-            'body' => XMLService::generateEnvelopeDoc(
-                $this->getTicketInvoice()->getCompany()->getRuc(), $credentials, $filename . '.zip', base64_encode(file_get_contents($ruta_zip))
-            ),
+            'body' => $body,
             'signature' => $signature
         ];
 
