@@ -17,10 +17,7 @@ class FacturaTest extends TestCase
      */
     public function itSendFactura()
     {
-        putenv("CODYFACT_PATH_CERTIFICATE=" . __DIR__ . '/CERTIFICADO-DEMO.pfx');
-        putenv("CODYFACT_PATH_ROOT=" . __DIR__);
-
-        $credentials = Credentials::factory('MODDATOS', 'MODDATOS');
+        $credentials = Credentials::factory('MODDATOS', 'MODDATOS', 'CERTIFICADO-DEMO.pfx', __DIR__);
 
         $codyFact = CodyFact::factory(CodyFact::LANGUAGE_SPANISH, CodyFact::ENV_SANDBOX);
 

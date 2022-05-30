@@ -98,11 +98,7 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
         $doc->preserveWhiteSpace = true;
         $doc->encoding = 'utf-8';
 
-        $documentGenerator = new DocumentGenerator();
-
-        $documentGenerator->setGenerator(new TwigGenerator());
-
-        $xml = $documentGenerator->render('ticket_invoice.xml.twig', [
+        $xml = $this->generateDocument('ticket_invoice.xml.twig', [
             'ticketInvoice' => $ticketInvoice,
             'company' => $ticketInvoice->getCompany(),
             'customer' => $ticketInvoice->getCustomer(),
@@ -129,11 +125,7 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
             $zip->close();
         }
 
-        $documentGenerator = new DocumentGenerator();
-
-        $documentGenerator->setGenerator(new TwigGenerator());
-
-        $body = $documentGenerator->render('envelope.xml.twig', [
+        $body = $this->generateDocument('envelope.xml.twig', [
             'data' => [
                 'username' => $this->getTicketInvoice()->getCompany()->getRuc() . $credentials['apiUsername'],
                 'password' => $credentials['apiPasssword'],
@@ -146,6 +138,16 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
             'body' => $body,
             'signature' => $signature
         ];
+
+    }
+
+    private function generateDocument($template, $data)
+    {
+        $documentGenerator = new DocumentGenerator();
+
+        $documentGenerator->setGenerator(new TwigGenerator());
+
+        return $documentGenerator->render($template, $data);
 
     }
 

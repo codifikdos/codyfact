@@ -32,18 +32,20 @@ class Credentials implements \Serializable
 
         $usernname = $data['apiUsername'];
         $password = $data['apiPasssword'];
+        $nameCertificate = $data['nameCertificate'];
+        $rootPath = $data['rootPath'];
 
-        $this->credentials = (function () use ($usernname, $password) {
-            return ['apiUsername' => $usernname, 'apiPasssword' => $password];
+        $this->credentials = (function () use ($usernname, $password, $nameCertificate, $rootPath) {
+            return ['apiUsername' => $usernname, 'apiPasssword' => $password, 'nameCertificate' => $nameCertificate, 'rootPath' => $rootPath];
         });
 
         return $this;
     }
 
-    public static function factory($usernname, $password)
+    public static function factory($usernname, $password, $nameCertificate = null, $rootPath = null)
     {
-        $credentials = new self(function () use ($usernname, $password) {
-            return ['apiUsername' => $usernname, 'apiPasssword' => $password];
+        $credentials = new self(function () use ($usernname, $password, $nameCertificate, $rootPath) {
+            return ['apiUsername' => $usernname, 'apiPasssword' => $password, 'nameCertificate' => $nameCertificate, 'rootPath' => $rootPath];
         });
 
         $result = CodyFact::validateCredentialsAndCertificate($credentials);

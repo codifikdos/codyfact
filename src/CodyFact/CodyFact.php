@@ -178,25 +178,27 @@ class CodyFact
             throw new InvalidCredentialsException();
         }
 
-        if (!getenv('CODYFACT_PATH_CERTIFICATE')) {
-            throw new CodyFactException('Especifica la ubicación del certificado electrónico: CODYFACT_PATH_CERTIFICATE');
+        if (empty($credentials['nameCertificate'])) {
+            throw new CodyFactException('Especifica el nombre del certificado electrónico');
         }
 
-        if (!file_exists(getenv('CODYFACT_PATH_CERTIFICATE')) || is_dir(getenv('CODYFACT_PATH_CERTIFICATE'))) {
-            throw new CodyFactException('El certificado no existe en: ' . getenv('CODYFACT_PATH_CERTIFICATE'));
+        if (empty($credentials['rootPath'])) {
+            throw new CodyFactException('Especifica la carpeta raiz del proyecto');
         }
 
-        if (!getenv('CODYFACT_PATH_ROOT')) {
-            throw new CodyFactException('Especifica la carpeta raiz del proyecto: CODYFACT_PATH_ROOT');
+        if (!file_exists($credentials['rootPath'] . '/' . $credentials['nameCertificate'])) {
+            throw new CodyFactException('El certificado no existe en: ' . $credentials['rootPath'] . '/' . $credentials['nameCertificate']);
         }
 
-        if (!is_dir(getenv('CODYFACT_PATH_ROOT') . '/xml')) {
-            mkdir(getenv('CODYFACT_PATH_ROOT') . '/xml', 0777);
+        if (!is_dir($credentials['rootPath'] . '/xml')) {
+            mkdir($credentials['rootPath'] . '/xml', 0777);
         }
-        if (!is_dir(getenv('CODYFACT_PATH_ROOT') . '/cdr')) {
-            mkdir(getenv('CODYFACT_PATH_ROOT') . '/cdr', 0777);
+        if (!is_dir($credentials['rootPath'] . '/cdr')) {
+            mkdir($credentials['rootPath'] . '/cdr', 0777);
         }
 
+        putenv("CODYFACT_PATH_ROOT=" . $credentials['rootPath']);
+        putenv("CODYFACT_PATH_CERTIFICATE=" . $credentials['rootPath'] . '/' . $credentials['nameCertificate']);
         putenv("CODYFACT_PATH_XML=" . getenv('CODYFACT_PATH_ROOT') . '/xml/');
         putenv("CODYFACT_PATH_CDR=" . getenv('CODYFACT_PATH_ROOT') . '/cdr/');
 
