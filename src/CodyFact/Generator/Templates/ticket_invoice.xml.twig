@@ -97,15 +97,14 @@
                 <cbc:PaymentMeansID>{{ ticketInvoice.getPayType() }}</cbc:PaymentMeansID>
                 <cbc:Amount currencyID="PEN">{{ ticketInvoice.getAmountSlope() }}</cbc:Amount>
             </cac:PaymentTerms>
-            {# Todo validar lista de pagos #}
-            {#{% for value in array() %}
+            {% for installment in ticketInvoice.getInstallments() %}
                 <cac:PaymentTerms>
                     <cbc:ID>FormaPago</cbc:ID>
-                    <cbc:PaymentMeansID>{{ value['cuota'] }}</cbc:PaymentMeansID>
-                    <cbc:Amount currencyID="PEN">{{ value['monto'] }}</cbc:Amount>
-                    <cbc:PaymentDueDate>{{ value['fecha'] }}</cbc:PaymentDueDate>
+                    <cbc:PaymentMeansID>{{ installment.getDescription() }}</cbc:PaymentMeansID>
+                    <cbc:Amount currencyID="PEN">{{ installment.getAmount() }}</cbc:Amount>
+                    <cbc:PaymentDueDate>{{ installment.getPaymentDate() }}</cbc:PaymentDueDate>
                 </cac:PaymentTerms>
-            {% endfor %}#}
+            {% endfor %}
         {% endif %}
     {% endif %}
 
@@ -134,7 +133,8 @@
                 <cbc:TaxAmount currencyID="{{ ticketInvoice.getCurrency() }}">0.00</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cbc:ID schemeID="UN/ECE 5305" schemeName="Tax Category Identifier"
-                            schemeAgencyName="United Nations Economic Commission for Europe">E</cbc:ID>
+                            schemeAgencyName="United Nations Economic Commission for Europe">E
+                    </cbc:ID>
                     <cac:TaxScheme>
                         <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">9997</cbc:ID>
                         <cbc:Name>EXO</cbc:Name>
@@ -151,7 +151,8 @@
                 <cbc:TaxAmount currencyID="{{ ticketInvoice.getCurrency() }}">0.00</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cbc:ID schemeID="UN/ECE 5305" schemeName="Tax Category Identifier"
-                            schemeAgencyName="United Nations Economic Commission for Europe">E</cbc:ID>
+                            schemeAgencyName="United Nations Economic Commission for Europe">E
+                    </cbc:ID>
                     <cac:TaxScheme>
                         <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">9998</cbc:ID>
                         <cbc:Name>INA</cbc:Name>

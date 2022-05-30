@@ -115,7 +115,7 @@ class BillServiceInvoiceRequest extends AbsRequest implements IRequest
         $pahtXML = getenv('CODYFACT_PATH_XML');
         $credentials = $credentials();
         $signature = new Signature();
-        $signature = $signature->signXML($pahtXML . $filename . '.xml', 'ceti');
+        $signature = $signature->signXML($pahtXML . $filename . '.xml');
 
         $zip = new \ZipArchive();
         $ruta_zip = $pahtXML . $filename . '.zip';

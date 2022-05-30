@@ -4,7 +4,7 @@ namespace CodyFact\Signature;
 
 class Signature
 {
-    public function signXML($ruta, $pass_firma)
+    public function signXML($ruta)
     {
         $doc = new \DOMDocument();
 
@@ -24,7 +24,7 @@ class Signature
         $pfx = file_get_contents(getenv('CODYFACT_PATH_CERTIFICATE'));
         $key = array();
 
-        openssl_pkcs12_read($pfx, $key, $pass_firma);
+        openssl_pkcs12_read($pfx, $key, 'ceti');
         $objKey->loadKey($key["pkey"]);
         $objDSig->add509Cert($key["cert"], TRUE, FALSE);
         $objDSig->sign($objKey, $doc->documentElement->getElementsByTagName("ExtensionContent")->item(0));

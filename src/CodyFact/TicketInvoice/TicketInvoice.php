@@ -4,6 +4,7 @@ namespace CodyFact\TicketInvoice;
 
 use CodyFact\Entity\IEntity;
 use CodyFact\TicketInvoice\Detail\Detail;
+use CodyFact\TicketInvoice\Detail\Installments;
 use CodyFact\TicketInvoice\Person\Company;
 use CodyFact\TicketInvoice\Person\Customer;
 
@@ -29,6 +30,13 @@ class TicketInvoice implements IEntity
      * @var Detail array()
      */
     protected $detail = array();
+
+    /**
+     * The installments
+     *
+     * @var Installments array()
+     */
+    protected $installments = array();
 
     protected $docType = null;
     protected $serie = null;
@@ -120,6 +128,29 @@ class TicketInvoice implements IEntity
         return $this;
     }
 
+    /**
+     * Get the installments
+     *
+     * @return Installments array()
+     */
+
+    public function getInstallments()
+    {
+        return $this->installments;
+    }
+
+    /**
+     * Set the installments
+     *
+     * @param Installments array() $installments
+     * @return TicketInvoice
+     */
+
+    public function setInstallments($installments)
+    {
+        $this->installments = $installments;
+        return $this;
+    }
 
     public function getDocType()
     {
@@ -287,6 +318,7 @@ class TicketInvoice implements IEntity
             'company' => $this->company->toArray(),
             'customer' => $this->customer->toArray(),
             'detail' => $this->detail,
+            'installments' => $this->installments,
             'docType' => $this->docType,
             'serie' => $this->serie,
             'number' => $this->number,
